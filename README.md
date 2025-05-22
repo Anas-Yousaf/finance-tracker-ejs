@@ -113,7 +113,7 @@ finance-tracker/
 ## 📱 Screenshots
 
 ### Dashboard View
-![Dashboard](screenshots/dashboard.png
+![Dashboard](screenshots/dashboard.png)
 *Main dashboard showing financial overview and quick transaction entry*
 
 ### Reports Page
