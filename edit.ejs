@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Transaction - Finance Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-wallet me-2"></i>Finance Tracker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports"><i class="fas fa-chart-bar me-1"></i> Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Flash Messages -->
+        <% if(locals.success_msg) { %>
+            <div class="alert alert-success alert-dismissible fade show">
+                <%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+        
+        <% if(locals.error_msg) { %>
+            <div class="alert alert-danger alert-dismissible fade show">
+                <%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Transaction</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/transactions/<%= transaction.id %>?_method=PUT" method="POST">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title" value="<%= transaction.title %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0.01" value="<%= transaction.amount %>" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Transaction Type</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="income" value="income" <%= transaction.type === 'income' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="income">
+                                        <i class="fas fa-arrow-down text-success me-1"></i>Income
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="expense" value="expense" <%= transaction.type === 'expense' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="expense">
+                                        <i class="fas fa-arrow-up text-danger me-1"></i>Expense
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <!-- Income Categories -->
+                                    <optgroup label="Income" id="incomeCategories">
+                                        <option value="Salary" <%= transaction.category === 'Salary' ? 'selected' : '' %>>Salary</option>
+                                        <option value="Investment" <%= transaction.category === 'Investment' ? 'selected' : '' %>>Investment</option>
+                                        <option value="Gift" <%= transaction.category === 'Gift' ? 'selected' : '' %>>Gift</option>
+                                        <option value="Business" <%= transaction.category === 'Business' ? 'selected' : '' %>>Business</option>
+                                        <option value="Other Income" <%= transaction.category === 'Other Income' ? 'selected' : '' %>>Other Income</option>
+                                    </optgroup>
+                                    <!-- Expense Categories -->
+                                    <optgroup label="Expense" id="expenseCategories">
+                                        <option value="Housing" <%= transaction.category === 'Housing' ? 'selected' : '' %>>Housing</option>
+                                        <option value="Food" <%= transaction.category === 'Food' ? 'selected' : '' %>>Food</option>
+                                        <option value="Transportation" <%= transaction.category === 'Transportation' ? 'selected' : '' %>>Transportation</option>
+                                        <option value="Utilities" <%= transaction.category === 'Utilities' ? 'selected' : '' %>>Utilities</option>
+                                        <option value="Healthcare" <%= transaction.category === 'Healthcare' ? 'selected' : '' %>>Healthcare</option>
+                                        <option value="Entertainment" <%= transaction.category === 'Entertainment' ? 'selected' : '' %>>Entertainment</option>
+                                        <option value="Shopping" <%= transaction.category === 'Shopping' ? 'selected' : '' %>>Shopping</option>
+                                        <option value="Education" <%= transaction.category === 'Education' ? 'selected' : '' %>>Education</option>
+                                        <option value="Personal" <%= transaction.category === 'Personal' ? 'selected' : '' %>>Personal</option>
+                                        <option value="Travel" <%= transaction.category === 'Travel' ? 'selected' : '' %>>Travel</option>
+                                        <option value="Other Expense" <%= transaction.category === 'Other Expense' ? 'selected' : '' %>>Other Expense</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description (Optional)</label>
+                                <textarea class="form-control" id="description" name="description" rows="2"><%= transaction.description || '' %></textarea>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a href="/" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Update Transaction
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-light py-3 mt-5">
+        <div class="container text-center">
+            <span class="text-muted">© <%= new Date().getFullYear() %> Finance Tracker | Made with <i class="fas fa-heart text-danger"></i></span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeRadios = document.querySelectorAll('input[name="type"]');
+            const categorySelect = document.getElementById('category');
+            const incomeCategories = document.getElementById('incomeCategories');
+            const expenseCategories = document.getElementById('expenseCategories');
+            
+            // Set initial state based on selected transaction type
+            updateCategoryVisibility();
+            
+            typeRadios.forEach(radio => {
+                radio.addEventListener('change', updateCategoryVisibility);
+            });
+            
+            function updateCategoryVisibility() {
+                const selectedType = document.querySelector('input[name="type"]:checked').value;
+                
+                if (selectedType === 'income') {
+                    incomeCategories.querySelectorAll('option').forEach(opt => opt.style.display = 'block');
+                    expenseCategories.querySelectorAll('option').forEach(opt => opt.style.display = 'none');
+                } else {
+                    incomeCategories.querySelectorAll('option').forEach(opt => opt.style.display = 'none');
+                    expenseCategories.querySelectorAll('option').forEach(opt => opt.style.display = 'block');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
